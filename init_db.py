@@ -16,6 +16,7 @@ cur.execute('CREATE TABLE posts (id serial PRIMARY KEY,'
                                  'title varchar (255) NOT NULL,'
                                  'author varchar (50) NOT NULL,'
                                  'content text,'
+                                 'is_published boolean DEFAULT false,'
                                  'date_added date DEFAULT CURRENT_TIMESTAMP);'
                                  )
 

@@ -21,13 +21,20 @@ cur.execute('CREATE TABLE posts (id serial PRIMARY KEY,'
                                  )
 
 # Insert data into the table
-
 cur.execute('INSERT INTO posts (title, author, content)'
             'VALUES (%s, %s, %s)',
             ('DSA',
              'Jake Espinosa',
              'A great classic!')
             )
+
+# Create users table
+cur.execute('DROP TABLE IF EXISTS users;')
+cur.execute('CREATE TABLE users (id serial PRIMARY KEY,'
+                                 'username varchar (255) UNIQUE NOT NULL,'
+                                 'password varchar (255) NOT NULL,'
+                                 'is_disabled boolean DEFAULT false NOT NULL);'
+                                 )
 
 conn.commit()
 

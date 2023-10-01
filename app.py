@@ -1,5 +1,5 @@
-from flask import Flask
-from sqlalchemy import create_engine, Column, Integer, String, Text
+from flask import Flask, request
+from sqlalchemy import create_engine, Column, Integer, String, Text, select
 from sqlalchemy.engine import URL
 from sqlalchemy.orm import deferred, DeclarativeBase
 import os
@@ -36,6 +36,13 @@ Base.metadata.create_all(engine)
 @app.route('/')
 def hello_world():
     return 'Hello World'
+
+@app.route('/signup', methods = ['POST'])
+def sign_up():
+    data = request.json
+    username = data.get('username')
+    password = data.get('password')
+    return [username, password]
  
 if __name__ == '__main__':
     app.run()

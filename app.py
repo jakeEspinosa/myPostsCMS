@@ -41,6 +41,8 @@ def hello_world():
 def sign_up():
     data = request.json
     usernameRes = data.get('username')
+    if usernameRes != 'jake':
+        return "Sorry, only jake can make an account!", 401
     passwordRes = data.get('password')
     stmt = (
     insert(User).

@@ -1,5 +1,5 @@
 from flask import Flask, request
-from sqlalchemy import create_engine, Column, Integer, String, Text, select
+from sqlalchemy import create_engine, Column, Integer, String, Text, select, insert
 from sqlalchemy.engine import URL
 from sqlalchemy.orm import deferred, DeclarativeBase
 import os
@@ -40,9 +40,17 @@ def hello_world():
 @app.route('/signup', methods = ['POST'])
 def sign_up():
     data = request.json
-    username = data.get('username')
-    password = data.get('password')
-    return [username, password]
- 
+    usernameRes = data.get('username')
+    passwordRes = data.get('password')
+    stmt = (
+    insert(User).
+    values(username=usernameRes, password=passwordRes)
+    )
+    with engine.connect() as conn:
+        conn.execute(stmt)
+        conn.commit()
+
+    return "success"
+
 if __name__ == '__main__':
     app.run()

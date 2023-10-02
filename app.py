@@ -12,8 +12,9 @@ class Base(DeclarativeBase):
 class User(Base):
     __tablename__ = 'users'
     id = Column(Integer, primary_key=True, nullable=False)
-    username = Column(String(30), unique=True)
-    password = deferred(Column(String(255)))
+    username = Column(String(30), unique=True, nullable=False)
+    password = deferred(Column(String(255), nullable=False))
+    email = Column(String(255), unique=True, nullable=False)
 
 class Post(Base):
     __tablename__ = 'posts'

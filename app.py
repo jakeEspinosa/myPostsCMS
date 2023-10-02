@@ -1,10 +1,13 @@
-from flask import Flask, request
-from sqlalchemy import create_engine, Column, Integer, String, Text, insert
+from flask import Flask, request, jsonify
+from sqlalchemy import create_engine, Column, Integer, String, Text, insert, select
 from sqlalchemy.engine import URL
 from sqlalchemy.orm import deferred, DeclarativeBase
+from flask_jwt_extended import JWTManager, jwt_required, create_access_token
 import os
 
 app = Flask(__name__)
+app.config['JWT_SECRET_KEY'] = os.environ['SECRET_KEY']
+jwt = JWTManager(app)
 
 class Base(DeclarativeBase):
     pass
@@ -41,15 +44,34 @@ def sign_up():
     if usernameRes != 'jake':
         return "Sorry, only jake can make an account!", 401
     passwordRes = data.get('password')
+    emailRes = data.get('email')
     stmt = (
     insert(User).
-    values(username=usernameRes, password=passwordRes)
+    values(username=usernameRes, password=passwordRes, email=emailRes)
     )
     with engine.connect() as conn:
         conn.execute(stmt)
         conn.commit()
 
     return "success"
+
+@app.route('/login', methods = ['POST'])
+def login():
+    data = request.json
+    passwordRes = data.get('password')
+    emailRes = data.get('email')
+    with engine.connect() as conn:
+        user = conn.execute(select(User).filter_by(email=emailRes, password=passwordRes))
+    if user:
+        access_token = create_access_token(identity=emailRes)
+        return jsonify(message='Login Successful', access_token=access_token)
+    else:
+        return jsonify('Bad email or Password'), 401
+
+@app.route('/', methods=['GET'])
+@jwt_required()
+def index():
+    return jsonify(message='Welcome to flask!')
 
 if __name__ == '__main__':
     app.run()

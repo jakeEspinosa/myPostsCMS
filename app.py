@@ -68,18 +68,23 @@ def login():
     else:
         return jsonify('Bad email or Password'), 401
 
-@app.route('/', methods=['GET'])
+@app.route('/posts', methods = ['POST'])
 @jwt_required()
-def index():
-    return jsonify(message='Welcome to flask!')
+def create_post():
+    data = request.json
+    titleRes = data.get('title')
+    authorRes = data.get('author')
+    contentRes = data.get('content')
 
-@app.route('/users', methods = ['GET'])
-def getUsers():
-    result = []
+    stmt = (
+    insert(Post).
+    values(title=titleRes, author=authorRes, content=contentRes)
+    )
     with engine.connect() as conn:
-        for row in conn.execute(select(User)):
-            result.append(row._asdict())
-    return jsonify(users=result)
+        conn.execute(stmt)
+        conn.commit()
+
+    return "inserted"
 
 if __name__ == '__main__':
     app.run()

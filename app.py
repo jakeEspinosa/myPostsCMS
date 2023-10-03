@@ -73,5 +73,13 @@ def login():
 def index():
     return jsonify(message='Welcome to flask!')
 
+@app.route('/users', methods = ['GET'])
+def getUsers():
+    result = []
+    with engine.connect() as conn:
+        for row in conn.execute(select(User)):
+            result.append(row._asdict())
+    return jsonify(users=result)
+
 if __name__ == '__main__':
     app.run()

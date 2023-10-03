@@ -86,5 +86,14 @@ def create_post():
 
     return "inserted"
 
+@app.route('/posts')
+def get_posts():
+    result = []
+    with engine.connect() as conn:
+        for id in conn.execute(select(User.id)):
+            result.append(id._asdict())
+    return jsonify(posts=result)
+
+
 if __name__ == '__main__':
     app.run()

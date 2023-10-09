@@ -1,0 +1,26 @@
+[project]
+name = "myPostsCMS"
+version = "1.0.0"
+description = "CMS backend"
+dependencies = [
+    "blinker",
+    "click",
+    "DateTime",
+    "Flask",
+    "Flask-JWT-Extended ",
+    "Flask-SQLAlchemy",
+    "greenlet",
+    "itsdangerous",
+    "Jinja2",
+    "MarkupSafe",
+    "psycopg2-binary",
+    "pytz",
+    "SQLAlchemy",
+    "typing_extensions",
+    "Werkzeug",
+    "zope.interface",
+]
+
+[build-system]
+requires = ["flit_core<4"]
+build-backend = "flit_core.buildapi"

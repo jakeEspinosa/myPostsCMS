@@ -38,25 +38,21 @@ url = URL.create(
 engine = create_engine(url)
 Base.metadata.create_all(engine)
 
-@app.route('/signup', methods = ['POST'])
-def sign_up():
-    data = request.json
-    usernameRes = data.get('username')
-    if usernameRes != 'jake':
-        return "Sorry, only jake can make an account!", 401
-    passwordRes = data.get('password')
-    passwordResBytes = bytes(passwordRes, 'utf-8')
-    hashedPassword = bcrypt.hashpw(passwordResBytes, bcrypt.gensalt(rounds=15))
-    emailRes = data.get('email')
-    stmt = (
-    insert(User).
-    values(username=usernameRes, password=hashedPassword, email=emailRes)
-    )
-    with engine.connect() as conn:
+
+with engine.connect() as conn:
+    for row in conn.execute(select(User).filter_by(username=os.environ['ACCT_USERNAME'])):
+        result = row._asdict()
+        if result:
+            break
+        else:
+            stmt = (
+                insert(User).
+                values(username=os.environ['ACCT_USERNAME'],
+                password=bcrypt.hashpw(bytes(os.environ['ACCT_PASSWORD'], 'utf-8'), bcrypt.gensalt()),
+                email=os.environ['ACCT_EMAIL'])
+                )
         conn.execute(stmt)
         conn.commit()
-
-    return "success"
 
 @app.route('/login', methods = ['POST'])
 def login():

@@ -3,6 +3,7 @@ name = "myPostsCMS"
 version = "1.0.0"
 description = "CMS backend"
 dependencies = [
+    "bcrypt",
     "blinker",
     "click",
     "DateTime",

@@ -38,9 +38,10 @@ url = URL.create(
 engine = create_engine(url)
 Base.metadata.create_all(engine)
 
+username1 = os.environ['ACCT_USERNAME']
 
 with engine.connect() as conn:
-    for row in conn.execute(select(User).filter_by(username=os.environ['ACCT_USERNAME'])):
+    for row in conn.execute(select(User).filter_by(username=username1)):
         result = row._asdict()
         if result:
             break

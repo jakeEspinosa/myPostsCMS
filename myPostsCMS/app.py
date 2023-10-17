@@ -40,10 +40,8 @@ Base.metadata.create_all(engine)
 
 username1 = os.environ['ACCT_USERNAME']
 
-with engine.connect() as conn:
-    for row in conn.execute(select(User).filter_by(username=username1)):
-        result = row._asdict()
-    if not result['username']:
+def seed_db():
+    with engine.connect() as conn:
         stmt = (
             insert(User).
             values(username=os.environ['ACCT_USERNAME'],
@@ -52,6 +50,13 @@ with engine.connect() as conn:
             )
         conn.execute(stmt)
         conn.commit()
+
+with engine.connect() as conn:
+    for row in conn.execute(select(User).filter_by(username=username1)):
+        result = row._asdict()
+
+if result:
+    
 
 @app.route('/login', methods = ['POST'])
 def login():

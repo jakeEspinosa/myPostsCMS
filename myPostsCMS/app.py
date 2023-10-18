@@ -36,27 +36,7 @@ url = URL.create(
 )
 
 engine = create_engine(url)
-Base.metadata.create_all(engine)
-
-username1 = os.environ['ACCT_USERNAME']
-
-def seed_db():
-    with engine.connect() as conn:
-        stmt = (
-            insert(User).
-            values(username=os.environ['ACCT_USERNAME'],
-            password=bcrypt.hashpw(bytes(os.environ['ACCT_PASSWORD'], 'utf-8'), bcrypt.gensalt()),
-            email=os.environ['ACCT_EMAIL'])
-            )
-        conn.execute(stmt)
-        conn.commit()
-
-with engine.connect() as conn:
-    for row in conn.execute(select(User).filter_by(username=username1)):
-        result = row._asdict()
-
-if result:
-    
+Base.metadata.create_all(engine)    
 
 @app.route('/login', methods = ['POST'])
 def login():
